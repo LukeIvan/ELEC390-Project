@@ -24,7 +24,7 @@ from tkinter import filedialog
 from tkinter import messagebox
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import os
-import csv
+# import csv
 
 
 
@@ -55,14 +55,14 @@ def segment_and_split_data(csv_path, window_size, train_frac):
 
 # Import walking data  - Segmenting data into non-overlapping widows, each contianing 5 secons of data (200 data samples collected per second)
 #                      - Segments used to train ML model on fixed-size time windowns of the input data
-member1_walking_train, member1_walking_test = segment_and_split_data(os.path.join('Bryce_Data', 'member1_walking.csv'), window_size=5*200, train_frac=0.9)
-member2_walking_train, member2_walking_test = segment_and_split_data(os.path.join('Luke_Data', 'member2_walking.csv'), window_size=5*200, train_frac=0.9)
-member3_walking_train, member3_walking_test = segment_and_split_data(os.path.join('Ryan_Data', 'member3_walking.csv'), window_size=5*200, train_frac=0.9)
+member1_walking_train, member1_walking_test = segment_and_split_data(os.path.join('Bryce_Data', 'walking.csv'), window_size=5*200, train_frac=0.9)
+member2_walking_train, member2_walking_test = segment_and_split_data(os.path.join('Luke_Data', 'walking.csv'), window_size=5*200, train_frac=0.9)
+member3_walking_train, member3_walking_test = segment_and_split_data(os.path.join('Ryan_Data', 'walking.csv'), window_size=5*200, train_frac=0.9)
 
 # Import jumping data
-member1_jumping_train, member1_jumping_test = segment_and_split_data(os.path.join('Bryce_Data', 'member1_jumping.csv'), window_size=5*200, train_frac=0.9)
-member2_jumping_train, member2_jumping_test = segment_and_split_data(os.path.join('Luke_Data', 'member2_jumping.csv'), window_size=5*200, train_frac=0.9)
-member3_jumping_train, member3_jumping_test = segment_and_split_data(os.path.join('Ryan_Data', 'member3_jumping.csv'), window_size=5*200, train_frac=0.9)
+member1_jumping_train, member1_jumping_test = segment_and_split_data(os.path.join('Bryce_Data', 'jumping.csv'), window_size=5*200, train_frac=0.9)
+member2_jumping_train, member2_jumping_test = segment_and_split_data(os.path.join('Luke_Data', 'jumping.csv'), window_size=5*200, train_frac=0.9)
+member3_jumping_train, member3_jumping_test = segment_and_split_data(os.path.join('Ryan_Data', 'jumping.csv'), window_size=5*200, train_frac=0.9)
 
 # Store the data in an HDF5 file
 with h5py.File('ELEC390FinalProject.h5', 'w') as hf:
@@ -72,12 +72,12 @@ with h5py.File('ELEC390FinalProject.h5', 'w') as hf:
     member3_grp = hf.create_group('Member3 - Luke')
 
     # Store the walking and jumping data for each member
-    member1_grp.create_dataset('walking_data', data=pd.read_csv('member1_walking.csv'))
-    member1_grp.create_dataset('jumping_data', data=pd.read_csv('member1_jumping.csv'))
-    member2_grp.create_dataset('walking_data', data=pd.read_csv('member2_walking.csv'))
-    member2_grp.create_dataset('jumping_data', data=pd.read_csv('member2_jumping.csv'))
-    member3_grp.create_dataset('walking_data', data=pd.read_csv('member3_walking.csv'))
-    member3_grp.create_dataset('jumping_data', data=pd.read_csv('member3_jumping.csv'))
+    member1_grp.create_dataset('walking_data', data=pd.read_csv(os.path.join('Bryce_Data', 'walking.csv')))
+    member1_grp.create_dataset('jumping_data', data=pd.read_csv(os.path.join('Bryce_Data', 'jumping.csv')))
+    member2_grp.create_dataset('walking_data', data=pd.read_csv(os.path.join('Luke_Data', 'walking.csv')))
+    member2_grp.create_dataset('jumping_data', data=pd.read_csv(os.path.join('Luke_Data', 'jumping.csv')))
+    member3_grp.create_dataset('walking_data', data=pd.read_csv(os.path.join('Ryan_Data', 'walking.csv')))
+    member3_grp.create_dataset('jumping_data', data=pd.read_csv(os.path.join('Ryan_Data', 'jumping.csv')))
 
     # Create the Dataset Group with train and test subgroups
     dataset_grp = hf.create_group('dataset')
@@ -113,7 +113,7 @@ with h5py.File('ELEC390FinalProject.h5', 'w') as hf:
 
 # VISUALIZATION
 
-# Function that will be used for ploting walking and jumping data
+# Function that will be used for ploting walking and jumping data --- WORKS!!!
 def plot_sample(sample, title):
     plt.figure()
     plt.plot(sample[:, 0], label='x-axis')
@@ -126,20 +126,20 @@ def plot_sample(sample, title):
     plt.show()
 
 # Plot a walking sample
-plot_sample(member1_walking_train[0], "Member1 Walking Sample")
+# plot_sample(member1_walking_train[0], "Member1 Walking Sample") #-- WORKS!!!
 
 # Plot a jumping sample
-plot_sample(member1_jumping_train[0], "Member1 Jumping Sample")
+# plot_sample(member1_jumping_train[0], "Member1 Jumping Sample") #-- WORKS!!!
 
-# Scatter plot of walking and jumping data
-plt.figure()
-plt.scatter(member1_walking_train[:, :, 0].flatten(), member1_walking_train[:, :, 1].flatten(), alpha=0.5, label='Walking')
-plt.scatter(member1_jumping_train[:, :, 0].flatten(), member1_jumping_train[:, :, 1].flatten(), alpha=0.5, label='Jumping')
-plt.xlabel('X-Axis Acceleration')
-plt.ylabel('Y-Axis Acceleration')
-plt.legend()
-plt.title("Member1 Walking vs Jumping Scatter Plot")
-plt.show()
+# # Scatter plot of walking and jumping data -- WORKS!!!
+# plt.figure()
+# plt.scatter(member1_walking_train[:, :, 0].flatten(), member1_walking_train[:, :, 1].flatten(), alpha=0.5, label='Walking')
+# plt.scatter(member1_jumping_train[:, :, 0].flatten(), member1_jumping_train[:, :, 1].flatten(), alpha=0.5, label='Jumping')
+# plt.xlabel('X-Axis Acceleration')
+# plt.ylabel('Y-Axis Acceleration')
+# plt.legend()
+# plt.title("Member1 Walking vs Jumping Scatter Plot")
+# plt.show()
 
 
 
@@ -265,14 +265,14 @@ accuracy = accuracy_score(test_labels, test_predictions)
 print("Accuracy:", accuracy)
 print("Classification Report:\n", classification_report(test_labels, test_predictions))
 
-# Monitoring via Training Curve - Monitor the taraining of the logic regression model using LogisticRegressionCV 
-plt.figure()
-plt.plot(lr_model.Cs_, np.mean(lr_model.scores_[1], axis=0))
-plt.xscale('log')
-plt.xlabel('Regularization Parameter (C)')
-plt.ylabel('Mean Cross-Validated Score')
-plt.title('Training Curve for Logistic Regression')
-plt.show()
+# Monitoring via Training Curve - Monitor the taraining of the logic regression model using LogisticRegressionCV -- WORKS!!!
+# plt.figure()
+# plt.plot(lr_model.Cs_, np.mean(lr_model.scores_[1], axis=0))
+# plt.xscale('log')
+# plt.xlabel('Regularization Parameter (C)')
+# plt.ylabel('Mean Cross-Validated Score')
+# plt.title('Training Curve for Logistic Regression')
+# plt.show()
 
 
 
@@ -294,8 +294,9 @@ def upload_csv():
         output_df = pd.DataFrame(columns=["segment", "label"])
         for i, pred in enumerate(predictions):
             label = "walking" if pred == 0 else "jumping"
-            output_df = output_df.append({"segment": i, "label": label}, ignore_index=True)
-        
+            output_df = pd.concat([output_df, pd.DataFrame({"segment": [i], "label": [label]})], ignore_index=True)
+
+
         output_file_path = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV Files", "*.csv")])
         if output_file_path:
             output_df.to_csv(output_file_path, index=False)
