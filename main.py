@@ -126,10 +126,10 @@ def plot_sample(sample, title):
     plt.show()
 
 # Plot a walking sample
-# plot_sample(member1_walking_train[0], "Member1 Walking Sample") #-- WORKS!!!
+# plot_sample(member1_walking_train[0], "Bryce Walking Sample") #-- WORKS!!!
 
 # Plot a jumping sample
-# plot_sample(member1_jumping_train[0], "Member1 Jumping Sample") #-- WORKS!!!
+# plot_sample(member1_jumping_train[0], "Bryce Jumping Sample") #-- WORKS!!!
 
 # # Scatter plot of walking and jumping data -- WORKS!!!
 # plt.figure()
@@ -138,7 +138,7 @@ def plot_sample(sample, title):
 # plt.xlabel('X-Axis Acceleration')
 # plt.ylabel('Y-Axis Acceleration')
 # plt.legend()
-# plt.title("Member1 Walking vs Jumping Scatter Plot")
+# plt.title("Bryce Walking vs Jumping Scatter Plot")
 # plt.show()
 
 
@@ -244,6 +244,36 @@ train_features_normalized = normalize_data(train_features)
 test_features_normalized = normalize_data(test_features)
 
 
+# LEARNING CURVE
+# Fucntion for learning curve
+def plot_learning_curve(model, train_features_normalized, train_labels):
+    from sklearn.model_selection import learning_curve
+
+    train_sizes, train_scores, test_scores = learning_curve(
+        model,
+        train_features_normalized,
+        train_labels,
+        train_sizes=np.linspace(0.1, 1.0, 10),
+        cv=5,
+        n_jobs=-1,
+    )
+
+    train_scores_mean = np.mean(train_scores, axis=1)
+    train_scores_std = np.std(train_scores, axis=1)
+    test_scores_mean = np.mean(test_scores, axis=1)
+    test_scores_std = np.std(test_scores, axis=1)
+
+    plt.figure()
+    plt.title("Learning Curve")
+    plt.xlabel("Training Examples")
+    plt.ylabel("Score")
+    plt.fill_between(train_sizes, train_scores_mean - train_scores_std, train_scores_mean + train_scores_std, alpha=0.1, color="r")
+    plt.fill_between(train_sizes, test_scores_mean - test_scores_std, test_scores_mean + test_scores_std, alpha=0.1, color="g")
+    plt.plot(train_sizes, train_scores_mean, "o-", color="r", label="Training score")
+    plt.plot(train_sizes, test_scores_mean, "o-", color="g", label="Cross-validation score")
+    plt.legend(loc="best")
+    plt.show()
+
 
 
 # CREATE A CLASSIFIER
@@ -264,6 +294,10 @@ accuracy = accuracy_score(test_labels, test_predictions)
 # Print the results from the accuracy and the classification reports
 print("Accuracy:", accuracy)
 print("Classification Report:\n", classification_report(test_labels, test_predictions))
+
+# Call the function to plot the learning curve
+# plot_learning_curve(lr_model, train_features_normalized, train_labels)
+
 
 # Monitoring via Training Curve - Monitor the taraining of the logic regression model using LogisticRegressionCV -- WORKS!!!
 # plt.figure()
